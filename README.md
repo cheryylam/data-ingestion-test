@@ -9,7 +9,7 @@ Simulation:
 1. Once completed, the data will be cleaned and transformed according to business needs and store it on the data mart layer.
 1. The final result wil be ready to be consumed by next user. In this case the output is excel that will be stored in PowerBI.
 
-<img src="pict/container.png" alt="Container" width="650" />
+<img src="pict/container.png" alt="Container" width="450" />
 
 I build the container using docker compose that contains:
 ### 1. DWH/Analytical Storage
@@ -22,7 +22,7 @@ I build the container using docker compose that contains:
     *   `worker`: Executes the actual data pipeline code and resource management.
 
 ## Pipeline Implementation
-<img src="pict/pipeline.png" alt="Pipeline" width="1100" />
+<img src="pict/pipline.png" alt="Pipeline" width="1100" />
 
 ### 1. wpp_project_data_xlsx
 - This asset consume data from folder sharing and load it into schema 'raw' in the DWH.
