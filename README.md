@@ -15,11 +15,11 @@ I build the container using docker compose that contains:
 ### 1. DWH/Analytical Storage
    **Function:** Serves as the central Data Warehouse (and Dagster storage backend).
 ### 2. Dagster
-   **Function:** Manages data pipelines, scheduling, and monitoring.
-   **Components:** 
-    *   `webserver`: The UI for managing runs and assets (Port `3000`).
-    *   `daemon`: Handles scheduling and sensors.
-    *   `worker`: Executes the actual data pipeline code and resource management.
+**Function:** Manages data pipelines, scheduling, and monitoring.
+   * **Components:** 
+      *   `webserver`: The UI for managing runs and assets (Port `3000`).
+      *   `daemon`: Handles scheduling and sensors.
+      *   `worker`: Executes the actual data pipeline code and resource management.
 
 ## Pipeline Implementation
 <img src="pict/pipline.png" alt="Pipeline" width="1100" />
