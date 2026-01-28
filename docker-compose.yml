@@ -1,0 +1,99 @@
+services:
+  dwh:
+    image: postgres:alpine
+    container_name: dwh
+    restart: always
+    environment:
+      TZ: Asia/Jakarta
+      POSTGRES_USER: ${DWH_USER}
+      POSTGRES_PASSWORD: ${DWH_PASSWORD}
+      POSTGRES_DB: ${DWH_DB}
+    volumes:
+      - ./postgres_data/init.sql:/docker-entrypoint-initdb.d/init_schemas.sql
+    ports:
+      - "${DWH_PORT}:5432"
+    networks:
+      - chrwppwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DWH_USER} -d ${DWH_DB}"]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+
+  worker:
+    build:
+      context: ./dagster
+      dockerfile: ./Dockerfile.worker
+    image: dagster/worker
+    container_name: worker
+    restart: always
+    environment:
+      TZ: Asia/Jakarta
+    env_file:
+      - ./.env
+    volumes:
+      - ./dagster/worker:/opt/dagster/app
+    networks:
+      - chrwppwork
+
+  webserver:
+    build:
+      context: ./dagster
+      dockerfile: ./Dockerfile.daemon
+    image: dagster/webserver
+    container_name: webserver
+    restart: always
+    environment:
+      TZ: Asia/Jakarta
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "${DAGSTER_PORT}"
+      - -w
+      - workspace.yaml
+    ports:
+      - "${DAGSTER_PORT}:3000"
+    env_file:
+      - ./.env
+    volumes: 
+      - ./dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+    networks:
+      - chrwppwork
+    depends_on:
+      dwh:
+        condition: service_healthy
+      worker:
+        condition: service_started
+
+  daemon:
+    build:
+      context: ./dagster
+      dockerfile: ./Dockerfile.daemon
+    image: dagster/daemon
+    container_name: daemon
+    restart: always
+    environment:
+      TZ: Asia/Jakarta
+    entrypoint:
+      - dagster-daemon
+      - run
+    env_file:
+      - ./.env
+    volumes:
+      - ./dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+    networks:
+      - chrwppwork
+    depends_on:
+      dwh:
+        condition: service_healthy
+      worker:
+        condition: service_started
+
+networks:
+  chrwppwork:
+    name: simulation
+    driver: bridge

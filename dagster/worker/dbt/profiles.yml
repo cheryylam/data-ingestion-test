@@ -1,0 +1,12 @@
+postgre:
+  outputs:
+    dwh:
+      dbname: warehouse
+      host: dwh
+      user: dwhuser
+      pass: dwhpass
+      port: 5432
+      schema: mart
+      threads: 1
+      type: postgres
+  target: dwh

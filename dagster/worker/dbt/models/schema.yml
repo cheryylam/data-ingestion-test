@@ -1,0 +1,9 @@
+sources:
+  - name: raw
+    tables: 
+      - name: wpp_project_data_xlsx
+
+models:
+  - name: wpp_project_data_clean
+    config:
+      materialized: table

@@ -1,0 +1,14 @@
+FROM python:3.10-slim-bookworm
+
+RUN apt update && \
+    apt-get install -y unixodbc unixodbc-dev && \ 
+    pip install uv
+
+COPY ./worker/requirements.txt .
+RUN uv pip install --system -r requirements.txt
+
+ENV DAGSTER_HOME=/opt/dagster/dagster_home/
+RUN mkdir -p $DAGSTER_HOME
+COPY ./dagster.yaml ./workspace.yaml $DAGSTER_HOME
+
+WORKDIR $DAGSTER_HOME

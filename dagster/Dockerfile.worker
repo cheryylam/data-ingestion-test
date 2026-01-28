@@ -1,0 +1,15 @@
+FROM python:3.10-slim-bookworm
+
+RUN apt update && \
+    apt-get install -y unixodbc unixodbc-dev && \
+    pip install uv
+
+COPY ./worker/requirements.txt .
+RUN uv pip install --system -r requirements.txt 
+
+WORKDIR /opt/dagster/app
+COPY ./worker /opt/dagster/app
+
+EXPOSE 4001
+
+CMD ["dagster", "code-server", "start", "-h", "0.0.0.0", "-p", "4001", "-f", "definitions.py"]
