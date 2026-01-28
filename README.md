@@ -14,7 +14,7 @@ Simulation:
 I build the container using docker compose that contains:
 ### 1. DWH/Analytical Storage
    **Function:** Serves as the central Data Warehouse (and Dagster storage backend).
-### 1. Dagster
+### 2. Dagster
    **Function:** Manages data pipelines, scheduling, and monitoring.
    **Components:** 
     *   `webserver`: The UI for managing runs and assets (Port `3000`).
@@ -26,12 +26,12 @@ I build the container using docker compose that contains:
 
 ### 1. wpp_project_data_xlsx
 - This asset consume data from folder sharing and load it into schema 'raw' in the DWH.
-### 1. wpp_project_data_clean
+### 2. wpp_project_data_clean
 - This asset cleaning data such as remove duplicate, fill NaN data, and change data type using dbt.
 - This asset stored in 'mart' schema inside the DWH.
-### 1. wpp_project_data_transfromed
+### 3. wpp_project_data_transfromed
 - This asset transforms the cleaned data using logarithmic functions
-### 1. wpp_report_excel
+### 4. wpp_report_excel
 - This asset export the data transformed into excel output
 
 ## Quick Start
